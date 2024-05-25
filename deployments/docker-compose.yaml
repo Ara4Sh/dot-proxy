@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  dot-proxy:
+    build:
+      dockerfile: ./build/package/Dockerfile
+      context: ../
+    ports:
+      - 8053:8053/udp
+      - 8053:8053/tcp

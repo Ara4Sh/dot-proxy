@@ -1,0 +1,9 @@
+#
+# Default options to run dot-proxy binary
+# This file should be coped to /etc/default/dot-proxy
+#
+# TODO: (Arash) we need to add this to our OS specific packages.
+#
+# @author Arash Shams <me@arashshams.com>
+
+DOT_PROXY_OPTIONS="--debug"

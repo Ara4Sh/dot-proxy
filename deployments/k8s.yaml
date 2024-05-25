@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dot-proxy
+  namespace: default
+spec:
+  selector:
+    app: dot-proxy
+  ports:
+  - protocol: UDP
+    port: 8053
+    targetPort: 8053
+    name: dot-udp
+  - protocol: TCP
+    port: 8053
+    targetPort: 8053
+    name: dot-tcp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dot-proxy
+  name: dot-proxy
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dot-proxy
+  template:
+    metadata:
+      labels:
+        app: dot-proxy
+    spec:
+      containers:
+      - image: europe-west1-docker.pkg.dev/carreta-400410/carreta-registry/dot-proxy:latest
+        name: dot-proxy
+        ports:
+          - containerPort: 8053
+            name: dot-udp
+          - containerPort: 8053
+            name: dot-tcp
+        readinessProbe:
+          exec:
+            command:
+              - /bin/sh
+              - -c
+              - nc -z -u localhost 8053 && nc -z localhost 8053
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          exec:
+            command:
+              - /bin/sh
+              - -c
+              - nc -z -u localhost 8053 && nc -z localhost 8053
+          initialDelaySeconds: 10
+          periodSeconds: 5 
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"

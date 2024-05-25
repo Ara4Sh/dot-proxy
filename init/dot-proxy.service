@@ -1,0 +1,22 @@
+#
+# Systemd unit file for dot-proxy
+# This file should be copied to systemd service direcotry, the path may vary based on different linux distros.
+#
+# TODO: (Arash) we need to add this to our OS specific packages.
+#
+# @author Arash Shams <me@arashshams.com>
+[Unit]
+Description=Simple CloudFlare DoT Proxy Service
+After=network.target
+
+[Service]
+User=nobody
+Group=nogroup
+ExecStart=/usr/local/dot-proxy $DNS_PROXY_OPTIONS
+Restart=always
+RestartSec=3
+LimitNOFILE=8192
+EnvironmentFile=/etc/default/dot-proxy
+
+[Install]
+WantedBy=multi-user.target
